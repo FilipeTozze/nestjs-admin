@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    container_name: curso_nest
+    volumes:
+      - .:/home/node/app
