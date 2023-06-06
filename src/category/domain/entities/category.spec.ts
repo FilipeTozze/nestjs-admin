@@ -1,4 +1,4 @@
-import UniqueEntityId from "../../../shared/domain/unique-entity-id.vo";
+import UniqueEntityId from "../../../shared/domain/value-objects/unique-entity-id.vo";
 import { Category, CategoryProperties } from "./category";
 
 describe("Category Test", () => {
@@ -28,17 +28,8 @@ describe("Category Test", () => {
     data.forEach((i) => {
       const category = new Category(i.props, i.id as any);
       expect(category.id).not.toBeNull();
-      expect(category.id).toBeInstanceOf(UniqueEntityId);
+      expect(category.uniqueEntityId).toBeInstanceOf(UniqueEntityId);
     });
-
-    const objConstructor: CategoryProperties = {
-      name: "Movie Test",
-    };
-
-    const category = new Category(objConstructor);
-
-    expect(category.id).not.toBeNull();
-    expect(category.id).toBeInstanceOf(UniqueEntityId);
   });
 
   test("constructor of category without date", () => {
@@ -74,5 +65,30 @@ describe("Category Test", () => {
     const category = new Category(objConstructor);
 
     expect(category.props).toMatchObject(objConstructor);
+  });
+
+  test("should active a category", () => {
+    const category = new Category({
+      name: "Filmes",
+      is_active: true,
+    });
+    category.activate();
+    expect(category.is_active).toBeTruthy();
+  });
+
+  test("should disable a category", () => {
+    const category = new Category({
+      name: "Filmes",
+      is_active: false,
+    });
+    category.deactivate();
+    expect(category.is_active).toBeFalsy();
+  });
+
+  it("should update a category", () => {
+    const category = new Category({ name: "Movie" });
+    category.update("Documentary", "some description");
+    expect(category.name).toBe("Documentary");
+    expect(category.description).toBe("some description");
   });
 });
